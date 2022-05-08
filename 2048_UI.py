@@ -36,12 +36,11 @@ class blockthingy:
     screen.blit(text, textrect)
   def __del__(self):
     pass
-
+blocklist=[[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
 def runGame():
   global done
   global blocklist
   screen.fill(WHITE)
-  blocklist=[[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
   for i in range(BOARDN):
     for j in range(BOARDN):
       pygame.draw.rect(screen, BLACK, [(size[0]/2) + (BLOCKLEN*(i-(BOARDN/2))), (size[1]/2) + (BLOCKLEN*(j-(BOARDN/2))), BLOCKLEN, BLOCKLEN], 2)
