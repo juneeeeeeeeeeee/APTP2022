@@ -21,12 +21,28 @@ class blockthingy:
     self.row=row
     self.col=col
   def updirection(self): # 블럭이 위로 움직이거나 합쳐지는 경우
+    # 1 합쳐지는 경우 : 인접한 위 바로 위의 블럭 값이 같은 경우 - 블럭이 하나만 남거나 위 아래 비교해서 다를 때까지 계속 반복
+    # 2 합쳐지지 않는 경우 : #1을 반복할 수 없는 경우
+    """
+
+
+    """
     pass
   def rightdirection(self): # 블럭이 오른쪽으로 움직이거나 합쳐지는 경우
+    # 1 합쳐지는 경우 : 인접한 위 바로 위의 블럭 값이 같은 경우 - 블럭이 하나만 남거나 왼쪽 오른쪽 비교해서 다를 때까지 계속 반복
+    # 2 합쳐지지 않는 경우 : #1을 반복할 수 없는 경우
+    """
+
+
+    """
     pass
   def downdirection(self): # 블럭이 아래로 움직이거나 합쳐지는 경우
+    # 1 합쳐지는 경우 : 인접한 위 바로 위의 블럭 값이 같은 경우 - 블럭이 하나만 남거나 위 아래 비교해서 다를 때까지 계속 반복
+    # 2 합쳐지지 않는 경우 : #1을 반복할 수 없는 경우
     pass
   def leftdirection(self): # 블럭이 왼쪽으로 움직이거나 합쳐지는 경우
+    # 1 합쳐지는 경우 : 인접한 위 바로 위의 블럭 값이 같은 경우 - 블럭이 하나만 남거나 왼쪽 오른쪽 비교해서 다를 때까지 계속 반복
+    # 2 합쳐지지 않는 경우 : #1을 반복할 수 없는 경우
     pass
   def showblockthingy(self): # 블럭의 위치를 표시
     pygame.draw.rect(screen, RED, [(size[0]/2) + (BLOCKLEN*(self.col-(BOARDN/2))), (size[1]/2) + (BLOCKLEN*(self.row-(BOARDN/2))), BLOCKLEN, BLOCKLEN])
@@ -47,7 +63,7 @@ def runGame():
   # 첫 블럭 생성
   newposition=random.randint(0, BOARDN*BOARDN)
   blocklist[newposition//BOARDN][newposition%BOARDN]=blockthingy(2, newposition//BOARDN, newposition%BOARDN)
-  # blocklist[newposition//BOARDN][newposition%BOARDN].showblockthingy()
+  blocklist[newposition//BOARDN][newposition%BOARDN].showblockthingy()
   while not done:
     clock.tick(10)
     for event in pygame.event.get():
@@ -74,7 +90,7 @@ def runGame():
         else:
           newposition=random.choice(checklist)
           blocklist[newposition//BOARDN][newposition%BOARDN]=blockthingy(2, newposition//BOARDN, newposition%BOARDN)
-          # blocklist[newposition//BOARDN][newposition%BOARDN].showblockthingy()
+          blocklist[newposition//BOARDN][newposition%BOARDN].showblockthingy()
     pygame.display.update() #update UI
 if __name__=="__main__":
   runGame()
