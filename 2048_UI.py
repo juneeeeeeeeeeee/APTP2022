@@ -71,7 +71,7 @@ def runGame():
         done=True
       elif event.type==pygame.KEYDOWN:
         if event.key==pygame.K_UP:
-          pass
+          pass # 홍상은 : 이거 위 방향키 눌렀을 때 함수인데 이거 알고리즘 대략 작성해주셈
         elif event.key==pygame.K_RIGHT:
           pass
         elif event.key==pygame.K_DOWN:
