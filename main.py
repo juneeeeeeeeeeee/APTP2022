@@ -81,9 +81,13 @@ blocklist = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, 
 
 def runGame():
     global done
+    done=False
     global blocklist
+    blocklist = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
     global checkmoved
+    checkmoved=0
     global score
+    score=0
     screen.fill(WHITE)
     for i in range(BOARDN):
         for j in range(BOARDN):
@@ -223,7 +227,7 @@ def runGame():
                     gameovertextrect.center = (size[0]/2,size[1]/2)
                     screen.blit(gameovertext, gameovertextrect)
                     pygame.display.update()
-                    time.sleep(10)
+                    time.sleep(2)
                     
                 elif checkmoved == 1:  # 전체 블럭에 변화가 있을 때만 newrect 생성
                     newposition = random.choice(checklist)
