@@ -236,6 +236,7 @@ def runGame():
                     blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
         pygame.display.update()  # update UI
         checkmoved = 0
+    return score
 
 
 

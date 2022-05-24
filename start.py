@@ -15,6 +15,8 @@ namefont = pygame.font.SysFont('arial', 70, True, False)
 font=pygame.font.SysFont('arial', 20)
 done = False
 clock = pygame.time.Clock()
+MAX_SCORE=0
+SCORE=0
 
 if __name__=="__main__":
   
@@ -36,6 +38,10 @@ if __name__=="__main__":
     gametextrect2 = gametext2.get_rect()
     gametextrect2.center = (round(size[0]/2),round(size[1]*9/12))
     screen.blit(gametext2, gametextrect2)
+    scoretext = font.render("max score:{0}".format(MAX_SCORE), True, BLACK)
+    scoretextrect = scoretext.get_rect()
+    scoretextrect.center = (round(size[0]/2),round(size[1]*3/12))
+    screen.blit(scoretext, scoretextrect)
     for event in pygame.event.get():
     
       if event.type==pygame.QUIT:
@@ -44,6 +50,8 @@ if __name__=="__main__":
         pygame.mouse.get_rel()
         mouse_pos=pygame.mouse.get_pos()
         if mouse_pos[0]>round(size[0]/4) and mouse_pos[0]<round(size[0]/4)+round(size[0]/2) and mouse_pos[1]>round(size[1]*1/3) and mouse_pos[1]<round(size[1]*1/3)+round(size[1]/6):
-          main.runGame()
+          SCORE=main.runGame()
+          if SCORE>MAX_SCORE:
+            MAX_SCORE=SCORE
     pygame.display.update()
   pygame.quit()
