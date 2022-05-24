@@ -38,10 +38,15 @@ if __name__=="__main__":
     gametextrect2 = gametext2.get_rect()
     gametextrect2.center = (round(size[0]/2),round(size[1]*9/12))
     screen.blit(gametext2, gametextrect2)
-    scoretext = font.render("max score:{0}".format(MAX_SCORE), True, BLACK)
-    scoretextrect = scoretext.get_rect()
-    scoretextrect.center = (round(size[0]/2),round(size[1]*3/12))
-    screen.blit(scoretext, scoretextrect)
+    maxscoretext = font.render("max score:{0}".format(MAX_SCORE), True, BLACK)
+    maxscoretextrect = maxscoretext.get_rect()
+    maxscoretextrect.center = (round(size[0]/2),round(size[1]*3/12))
+    screen.blit(maxscoretext, maxscoretextrect)
+    pygame.draw.rect(screen, BLACK, [round(size[0]/3),round(size[1]*21/24),round(size[0]/3),round(size[1]*2/24)], 4)
+    resetmaxscoretext = font.render("reset max score", True, BLACK)
+    resetmaxscoretextrect = resetmaxscoretext.get_rect()
+    resetmaxscoretextrect.center = (round(size[0]/2),round(size[1]*11/12))
+    screen.blit(resetmaxscoretext, resetmaxscoretextrect)
     for event in pygame.event.get():
     
       if event.type==pygame.QUIT:
@@ -53,5 +58,7 @@ if __name__=="__main__":
           SCORE=main.runGame()
           if SCORE>MAX_SCORE:
             MAX_SCORE=SCORE
+        elif mouse_pos[0]>round(size[0]/3) and mouse_pos[0]<round(size[0]*2/3) and mouse_pos[1]>round(size[1]*21/24) and mouse_pos[1]<round(size[1]*23/24):
+          MAX_SCORE=0
     pygame.display.update()
   pygame.quit()

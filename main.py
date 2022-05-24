@@ -231,8 +231,7 @@ def runGame():
                     time.sleep(2)
                 elif checkmoved == 1:  # 전체 블럭에 변화가 있을 때만 newrect 생성
                     newposition = random.choice(checklist)
-                    blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN,
-                                                                                         newposition % BOARDN)
+                    blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
                     blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
                     checklist.remove(newposition)
         pygame.display.update()  # update UI
