@@ -13,7 +13,7 @@ RED = (255, 0, 0)
 size = [600, 600]
 BOARDN = 3
 BLOCKLEN = 70
-checkmoved = 0
+checkmoved = False
 score = 0
 
 screen = pygame.display.set_mode(size)
@@ -77,7 +77,106 @@ class blockthingy:
 
 
 blocklist = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
-
+def move_right(blocklist_in_function):
+    checkmoved_in_function=False
+    score_add=0
+    for i in range (0, BOARDN):
+        collist = []
+        for k in range (0, BOARDN):
+            collist.append(blocklist_in_function[i][k].blocknum)
+        rememberlist = copy.deepcopy(collist)
+        while 0 in collist:
+            collist.remove(0)
+        if len(collist) >= 2:
+            for k in range (len(collist)-1, 0, -1):
+                if collist[k] != 0 and collist[k] == collist[k-1]:
+                    collist[k] *= 2
+                    collist[k-1] = 0
+                    score_add += collist[k]
+        while 0 in collist:
+            collist.remove(0)
+        while len(collist) < BOARDN:
+            collist.insert(0, 0)
+        for k in range (0, BOARDN):
+            blocklist_in_function[i][k].blocknum = collist[k]
+        if rememberlist != collist:
+            checkmoved_in_function = True
+    return blocklist_in_function, checkmoved_in_function, score_add
+def move_down(blocklist_in_function):
+    checkmoved_in_function=False
+    score_add=0
+    for j in range (0, BOARDN):
+        collist = []
+        for k in range (0, BOARDN):
+            collist.append(blocklist_in_function[k][j].blocknum)
+        rememberlist = copy.deepcopy(collist)
+        while 0 in collist:
+            collist.remove(0)
+        if len(collist) >= 2:
+            for k in range (len(collist)-1, 0, -1):
+                if collist[k] != 0 and collist[k] == collist[k-1]:
+                    collist[k] *= 2
+                    collist[k-1] = 0
+                    score_add += collist[k]
+        while 0 in collist:
+            collist.remove(0)
+        while len(collist) < BOARDN:
+            collist.insert(0, 0)
+        for k in range (0, BOARDN):
+            blocklist_in_function[k][j].blocknum = collist[k]
+        if rememberlist != collist:
+            checkmoved_in_function = True
+    return blocklist_in_function, checkmoved_in_function, score_add
+def move_left(blocklist_in_function):
+    checkmoved_in_function=False
+    score_add=0
+    for i in range (0, BOARDN):  # line 33에서 설명한 부분. [여기][]만 매개변수로서 의미있고 [][여기]는 비워두면 오류나서 그냥 똑같이 i로 채움...
+        collist = []
+        for k in range (0, BOARDN):
+            collist.append(blocklist_in_function[i][k].blocknum)
+        rememberlist = copy.deepcopy(collist)
+        while 0 in collist:
+            collist.remove(0)
+        if len(collist) >= 2:
+            for k in range (0, len(collist)-1):
+                if collist[k] != 0 and collist[k] == collist[k+1]:
+                    collist[k] *= 2
+                    collist[k+1] = 0
+                    score_add += collist[k]
+        while 0 in collist:
+            collist.remove(0)
+        while len(collist) < BOARDN:
+            collist.append(0)
+        for k in range (0, BOARDN):
+            blocklist_in_function[i][k].blocknum = collist[k]
+        if rememberlist != collist:
+            checkmoved_in_function = True
+    return blocklist_in_function, checkmoved_in_function, score_add
+def move_up(blocklist_in_function):
+    checkmoved_in_function=False
+    score_add=0
+    for j in range (0, BOARDN):  
+        collist = []  # 정렬할 list
+        for k in range (0, BOARDN):  # 하나의 열에서 N개의 blocklist.blocknum을 차례로 list에 대입
+            collist.append(blocklist_in_function[k][j].blocknum)
+        rememberlist = copy.deepcopy(collist)  # 블럭 변화 감지를 위한 tmp list
+        while 0 in collist:  # blocknum들의 합체를 위해 하나의 열에서 white 배경에 해당하는 0 제거
+            collist.remove(0)
+        if len(collist) >= 2:  # blocknum 합체는 숫자가 2개 이상일 때만 필요
+            for k in range (0, len(collist)-1):  # 0을 제외하고 자신의 blocknum이 위의 blocknum과 같을 경우 합체
+                if collist[k] != 0 and collist[k] == collist[k+1]:
+                    collist[k] *= 2
+                    collist[k+1] = 0
+                    score_add += collist[k]  # 그냥 점수...
+        while 0 in collist:  # 합체한 후 남은 0 제거 ( (2,2,2,2)에서 (4,0,4,0)이 되면 (4,4,0,0)처럼 왼쪽으로 몰아줘야돼서 사이의 0 제거) )
+            collist.remove(0)
+        while len(collist) < BOARDN:  # list 길이 4로 복구
+            collist.append(0)
+        for k in range (0, BOARDN):  # blocklist.blocknum에 다시 대입
+            blocklist_in_function[k][j].blocknum = collist[k]
+        if rememberlist != collist:  # 블럭에 변화가 있다면 1
+            checkmoved_in_function = True
+    return blocklist_in_function, checkmoved_in_function, score_add
 
 def runGame():
     global done
@@ -85,7 +184,7 @@ def runGame():
     global blocklist
     blocklist = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
     global checkmoved
-    checkmoved=0
+    checkmoved=False
     global score
     score=0
     screen.fill(WHITE)
@@ -116,98 +215,22 @@ def runGame():
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    for j in range (0, BOARDN):  
-                        collist = []  # 정렬할 list
-                        for k in range (0, BOARDN):  # 하나의 열에서 N개의 blocklist.blocknum을 차례로 list에 대입
-                            collist.append(blocklist[k][j].blocknum)
-                        rememberlist = copy.deepcopy(collist)  # 블럭 변화 감지를 위한 tmp list
-                        while 0 in collist:  # blocknum들의 합체를 위해 하나의 열에서 white 배경에 해당하는 0 제거
-                            collist.remove(0)
-                        if len(collist) >= 2:  # blocknum 합체는 숫자가 2개 이상일 때만 필요
-                            for k in range (0, len(collist)-1):  # 0을 제외하고 자신의 blocknum이 위의 blocknum과 같을 경우 합체
-                                if collist[k] != 0 and collist[k] == collist[k+1]:
-                                    collist[k] *= 2
-                                    collist[k+1] = 0
-                                    score += collist[k]  # 그냥 점수...
-                        while 0 in collist:  # 합체한 후 남은 0 제거 ( (2,2,2,2)에서 (4,0,4,0)이 되면 (4,4,0,0)처럼 왼쪽으로 몰아줘야돼서 사이의 0 제거) )
-                            collist.remove(0)
-                        while len(collist) < BOARDN:  # list 길이 4로 복구
-                            collist.append(0)
-                        for k in range (0, BOARDN):  # blocklist.blocknum에 다시 대입
-                            blocklist[k][j].blocknum = collist[k]
-                        if rememberlist != collist:  # 블럭에 변화가 있다면 1
-                            checkmoved = 1
+                if event.key == pygame.K_RIGHT:
+                    return_list=move_right(blocklist)
+                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
 
                 elif event.key == pygame.K_DOWN:
-                    for j in range (0, BOARDN):
-                        collist = []
-                        for k in range (0, BOARDN):
-                            collist.append(blocklist[k][j].blocknum)
-                        rememberlist = copy.deepcopy(collist)
-                        while 0 in collist:
-                            collist.remove(0)
-                        if len(collist) >= 2:
-                            for k in range (len(collist)-1, 0, -1):
-                                if collist[k] != 0 and collist[k] == collist[k-1]:
-                                    collist[k] *= 2
-                                    collist[k-1] = 0
-                                    score += collist[k]
-                        while 0 in collist:
-                            collist.remove(0)
-                        while len(collist) < BOARDN:
-                            collist.insert(0, 0)
-                        for k in range (0, BOARDN):
-                            blocklist[k][j].blocknum = collist[k]
-                        if rememberlist != collist:
-                            checkmoved = 1
+                    return_list=move_down(blocklist)
+                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
 
                 elif event.key == pygame.K_LEFT:
-                    for i in range (0, BOARDN):  # line 33에서 설명한 부분. [여기][]만 매개변수로서 의미있고 [][여기]는 비워두면 오류나서 그냥 똑같이 i로 채움...
-                        collist = []
-                        for k in range (0, BOARDN):
-                            collist.append(blocklist[i][k].blocknum)
-                        rememberlist = copy.deepcopy(collist)
-                        while 0 in collist:
-                            collist.remove(0)
-                        if len(collist) >= 2:
-                            for k in range (0, len(collist)-1):
-                                if collist[k] != 0 and collist[k] == collist[k+1]:
-                                    collist[k] *= 2
-                                    collist[k+1] = 0
-                                    score += collist[k]
-                        while 0 in collist:
-                            collist.remove(0)
-                        while len(collist) < BOARDN:
-                            collist.append(0)
-                        for k in range (0, BOARDN):
-                            blocklist[i][k].blocknum = collist[k]
-                        if rememberlist != collist:
-                            checkmoved = 1
+                    return_list=move_left(blocklist)
+                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
 
-                elif event.key == pygame.K_RIGHT:
-                    for i in range (0, BOARDN):
-                        collist = []
-                        for k in range (0, BOARDN):
-                            collist.append(blocklist[i][k].blocknum)
-                        rememberlist = copy.deepcopy(collist)
-                        while 0 in collist:
-                            collist.remove(0)
-                        if len(collist) >= 2:
-                            for k in range (len(collist)-1, 0, -1):
-                                if collist[k] != 0 and collist[k] == collist[k-1]:
-                                    collist[k] *= 2
-                                    collist[k-1] = 0
-                                    score += collist[k]
-                        while 0 in collist:
-                            collist.remove(0)
-                        while len(collist) < BOARDN:
-                            collist.insert(0, 0)
-                        for k in range (0, BOARDN):
-                            blocklist[i][k].blocknum = collist[k]
-                        if rememberlist != collist:
-                            checkmoved = 1
-
+                elif event.key == pygame.K_UP:
+                    return_list=move_up(blocklist)
+                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    
                 else:
                     continue
                 # 블럭이 차지 않은 구역 확인 & 블럭이 모두 차있을 경우 게임 오버 & 해당 구역에서 랜덤하게 하나를 뽑아 블럭 생성
@@ -221,7 +244,7 @@ def runGame():
                     else:  # 블럭이 차있는 구역은 블럭 그리기
                         blocklist[i // BOARDN][i % BOARDN].showblockthingy()
                 
-                if len(checklist) == 0:
+                if len(checklist) == 0: 
                     done = True
                     gameovertext = bigfont.render("GAME OVER!", True, BLACK)
                     gameovertextrect = gameovertext.get_rect()
@@ -229,13 +252,13 @@ def runGame():
                     screen.blit(gameovertext, gameovertextrect)
                     pygame.display.update()
                     time.sleep(2)
-                elif checkmoved == 1:  # 전체 블럭에 변화가 있을 때만 newrect 생성
+                elif checkmoved == True:  # 전체 블럭에 변화가 있을 때만 newrect 생성
                     newposition = random.choice(checklist)
                     blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
                     blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
                     checklist.remove(newposition)
         pygame.display.update()  # update UI
-        checkmoved = 0
+        checkmoved = False
     return score
 
 
