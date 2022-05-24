@@ -94,7 +94,7 @@ def runGame():
             pygame.draw.rect(screen, BLACK, [(size[0] / 2) + (BLOCKLEN * (i - (BOARDN / 2))),
                                              (size[1] / 2) + (BLOCKLEN * (j - (BOARDN / 2))), BLOCKLEN, BLOCKLEN], 2)
     # 첫 블럭 생성
-    newposition = random.randint(0, BOARDN * BOARDN)
+    newposition = random.randint(0, BOARDN * BOARDN-1)
     blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
     blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
     while not done:
@@ -213,13 +213,14 @@ def runGame():
                 # 블럭이 차지 않은 구역 확인 & 블럭이 모두 차있을 경우 게임 오버 & 해당 구역에서 랜덤하게 하나를 뽑아 블럭 생성
                 checklist = []
                 for i in range(0, BOARDN * BOARDN):
-                    if blocklist[i // BOARDN][i % BOARDN].blocknum == 0:
+                    if blocklist[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역은 흰색 블럭 그리기
                         checklist.append(i)
                         pygame.draw.rect(screen, WHITE, [(size[0] / 2) + (BLOCKLEN * (i%BOARDN - (BOARDN / 2)))+2,
                                                        (size[1] / 2) + (BLOCKLEN * (i//BOARDN - (BOARDN / 2)))+2,
                                                        BLOCKLEN-4, BLOCKLEN-4])
-                    else:  # 블럭이 차있는 구역은 블럭 생성
+                    else:  # 블럭이 차있는 구역은 블럭 그리기
                         blocklist[i // BOARDN][i % BOARDN].showblockthingy()
+                
                 if len(checklist) == 0:
                     done = True
                     gameovertext = bigfont.render("GAME OVER!", True, BLACK)
@@ -228,21 +229,18 @@ def runGame():
                     screen.blit(gameovertext, gameovertextrect)
                     pygame.display.update()
                     time.sleep(2)
-                    
                 elif checkmoved == 1:  # 전체 블럭에 변화가 있을 때만 newrect 생성
                     newposition = random.choice(checklist)
                     blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN,
                                                                                          newposition % BOARDN)
                     blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
+                    checklist.remove(newposition)
         pygame.display.update()  # update UI
         checkmoved = 0
     return score
 
 
 
-if __name__ == "__main__":
-    runGame()
-    pygame.quit()
 
     """
                         총 행의 개수가 boardn이므로 1행부터 boardn행까지 각각 밑의 동작 반복
