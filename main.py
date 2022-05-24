@@ -11,17 +11,16 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 size = [600, 600]
-BOARDN = 3
+BOARDN = 4
 BLOCKLEN = 70
-checkmoved = False
-score = 0
+
 
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("2048!")
 font = pygame.font.SysFont('arial', 20)
 bigfont=pygame.font.SysFont('arial', 40, True, True)
-done = False
 clock = pygame.time.Clock()
+
 
 
 class blockthingy:
@@ -72,18 +71,15 @@ class blockthingy:
                            (size[1] / 2) + (BLOCKLEN * (self.row - (BOARDN - 1) / 2)))
         screen.blit(text, textrect)
 
-    def __del__(self):
-        pass
-
-
-blocklist = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
 def move_right(blocklist_in_function):
+    is_valid_in_function=True
     checkmoved_in_function=False
     score_add=0
+    out_blocklist_in_function=copy.deepcopy(blocklist_in_function)
     for i in range (0, BOARDN):
         collist = []
         for k in range (0, BOARDN):
-            collist.append(blocklist_in_function[i][k].blocknum)
+            collist.append(out_blocklist_in_function[i][k].blocknum)
         rememberlist = copy.deepcopy(collist)
         while 0 in collist:
             collist.remove(0)
@@ -98,17 +94,31 @@ def move_right(blocklist_in_function):
         while len(collist) < BOARDN:
             collist.insert(0, 0)
         for k in range (0, BOARDN):
-            blocklist_in_function[i][k].blocknum = collist[k]
+            out_blocklist_in_function[i][k].blocknum = collist[k]
         if rememberlist != collist:
-            checkmoved_in_function = True
-    return blocklist_in_function, checkmoved_in_function, score_add
+            checkmoved_in_function=True
+        
+    checklist = []
+    for i in range(0, BOARDN * BOARDN):
+        if out_blocklist_in_function[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역 체크
+            checklist.append(i)
+    if len(checklist)==0:
+        is_valid_in_function=False
+
+    elif checkmoved_in_function==True:
+        newposition = random.choice(checklist)
+        out_blocklist_in_function[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
+    return out_blocklist_in_function, is_valid_in_function, score_add, checkmoved_in_function
+
 def move_down(blocklist_in_function):
+    is_valid_in_function=True
     checkmoved_in_function=False
     score_add=0
+    out_blocklist_in_function=copy.deepcopy(blocklist_in_function)
     for j in range (0, BOARDN):
         collist = []
         for k in range (0, BOARDN):
-            collist.append(blocklist_in_function[k][j].blocknum)
+            collist.append(out_blocklist_in_function[k][j].blocknum)
         rememberlist = copy.deepcopy(collist)
         while 0 in collist:
             collist.remove(0)
@@ -123,17 +133,30 @@ def move_down(blocklist_in_function):
         while len(collist) < BOARDN:
             collist.insert(0, 0)
         for k in range (0, BOARDN):
-            blocklist_in_function[k][j].blocknum = collist[k]
+            out_blocklist_in_function[k][j].blocknum = collist[k]
         if rememberlist != collist:
-            checkmoved_in_function = True
-    return blocklist_in_function, checkmoved_in_function, score_add
+            checkmoved_in_function=True
+    checklist = []
+    for i in range(0, BOARDN * BOARDN):
+        if out_blocklist_in_function[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역 체크
+            checklist.append(i)
+    if len(checklist)==0:
+        is_valid_in_function=False
+
+    elif checkmoved_in_function==True:
+        newposition = random.choice(checklist)
+        out_blocklist_in_function[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
+    return out_blocklist_in_function, is_valid_in_function, score_add, checkmoved_in_function
+
 def move_left(blocklist_in_function):
+    is_valid_in_function=True
     checkmoved_in_function=False
     score_add=0
-    for i in range (0, BOARDN):  # line 33에서 설명한 부분. [여기][]만 매개변수로서 의미있고 [][여기]는 비워두면 오류나서 그냥 똑같이 i로 채움...
+    out_blocklist_in_function=copy.deepcopy(blocklist_in_function)
+    for i in range (0, BOARDN):  
         collist = []
         for k in range (0, BOARDN):
-            collist.append(blocklist_in_function[i][k].blocknum)
+            collist.append(out_blocklist_in_function[i][k].blocknum)
         rememberlist = copy.deepcopy(collist)
         while 0 in collist:
             collist.remove(0)
@@ -148,17 +171,30 @@ def move_left(blocklist_in_function):
         while len(collist) < BOARDN:
             collist.append(0)
         for k in range (0, BOARDN):
-            blocklist_in_function[i][k].blocknum = collist[k]
+            out_blocklist_in_function[i][k].blocknum = collist[k]
         if rememberlist != collist:
-            checkmoved_in_function = True
-    return blocklist_in_function, checkmoved_in_function, score_add
+            checkmoved_in_function=True
+    checklist = []
+    for i in range(0, BOARDN * BOARDN):
+        if out_blocklist_in_function[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역 체크
+            checklist.append(i)
+    if len(checklist)==0:
+        is_valid_in_function=False
+
+    elif checkmoved_in_function==True:
+        newposition = random.choice(checklist)
+        out_blocklist_in_function[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
+    return out_blocklist_in_function, is_valid_in_function, score_add, checkmoved_in_function
+
 def move_up(blocklist_in_function):
+    is_valid_in_function=True
     checkmoved_in_function=False
     score_add=0
+    out_blocklist_in_function=copy.deepcopy(blocklist_in_function)
     for j in range (0, BOARDN):  
         collist = []  # 정렬할 list
         for k in range (0, BOARDN):  # 하나의 열에서 N개의 blocklist.blocknum을 차례로 list에 대입
-            collist.append(blocklist_in_function[k][j].blocknum)
+            collist.append(out_blocklist_in_function[k][j].blocknum)
         rememberlist = copy.deepcopy(collist)  # 블럭 변화 감지를 위한 tmp list
         while 0 in collist:  # blocknum들의 합체를 위해 하나의 열에서 white 배경에 해당하는 0 제거
             collist.remove(0)
@@ -173,19 +209,41 @@ def move_up(blocklist_in_function):
         while len(collist) < BOARDN:  # list 길이 4로 복구
             collist.append(0)
         for k in range (0, BOARDN):  # blocklist.blocknum에 다시 대입
-            blocklist_in_function[k][j].blocknum = collist[k]
-        if rememberlist != collist:  # 블럭에 변화가 있다면 1
-            checkmoved_in_function = True
-    return blocklist_in_function, checkmoved_in_function, score_add
+            out_blocklist_in_function[k][j].blocknum = collist[k]
+        if rememberlist != collist:
+            checkmoved_in_function=True
+    checklist = []
+    for i in range(0, BOARDN * BOARDN):
+        if out_blocklist_in_function[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역은 흰색 블럭 그리기
+            checklist.append(i)
+    if len(checklist)==0:
+        is_valid_in_function=False
+
+    elif checkmoved_in_function==True:
+        newposition = random.choice(checklist)
+        out_blocklist_in_function[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
+    return out_blocklist_in_function, is_valid_in_function, score_add, checkmoved_in_function
+
+moves = [move_right, move_down, move_left, move_up]  # 함수 배열
+
+def draw_blocklist(blocklist_in_function):
+    for i in range(0, BOARDN * BOARDN):
+        if blocklist_in_function[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역은 흰색 블럭 그리기
+            pygame.draw.rect(screen, WHITE, [(size[0] / 2) + (BLOCKLEN * (i%BOARDN - (BOARDN / 2)))+2,
+                                            (size[1] / 2) + (BLOCKLEN * (i//BOARDN - (BOARDN / 2)))+2,
+                                            BLOCKLEN-4, BLOCKLEN-4])
+        else:  # 블럭이 차있는 구역은 블럭 그리기
+            blocklist_in_function[i // BOARDN][i % BOARDN].showblockthingy()
+def terminal_blocklist(blocklist_in_function):
+    for i in range(0, BOARDN):
+        for j in range(0, BOARDN):
+            print(blocklist_in_function[i][j].blocknum, end=' ')
+        print(" ")
 
 def runGame():
-    global done
     done=False
-    global blocklist
     blocklist = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
-    global checkmoved
-    checkmoved=False
-    global score
+    is_valid=True
     score=0
     screen.fill(WHITE)
     for i in range(BOARDN):
@@ -195,7 +253,7 @@ def runGame():
     # 첫 블럭 생성
     newposition = random.randint(0, BOARDN * BOARDN-1)
     blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
-    blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
+    draw_blocklist(blocklist)
     while not done:
         clock.tick(10)
         # 점수판
@@ -217,34 +275,28 @@ def runGame():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     return_list=move_right(blocklist)
-                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    blocklist, is_valid, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    draw_blocklist(blocklist)
+                    
 
                 elif event.key == pygame.K_DOWN:
                     return_list=move_down(blocklist)
-                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    blocklist, is_valid, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    draw_blocklist(blocklist)
 
                 elif event.key == pygame.K_LEFT:
                     return_list=move_left(blocklist)
-                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    blocklist, is_valid, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    draw_blocklist(blocklist)
 
                 elif event.key == pygame.K_UP:
                     return_list=move_up(blocklist)
-                    blocklist, checkmoved, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
-                    
+                    blocklist, is_valid, score=copy.deepcopy(return_list[0]), return_list[1], score+return_list[2]
+                    draw_blocklist(blocklist)
+                
                 else:
                     continue
-                # 블럭이 차지 않은 구역 확인 & 블럭이 모두 차있을 경우 게임 오버 & 해당 구역에서 랜덤하게 하나를 뽑아 블럭 생성
-                checklist = []
-                for i in range(0, BOARDN * BOARDN):
-                    if blocklist[i // BOARDN][i % BOARDN].blocknum == 0: # 블럭이 없는 구역은 흰색 블럭 그리기
-                        checklist.append(i)
-                        pygame.draw.rect(screen, WHITE, [(size[0] / 2) + (BLOCKLEN * (i%BOARDN - (BOARDN / 2)))+2,
-                                                       (size[1] / 2) + (BLOCKLEN * (i//BOARDN - (BOARDN / 2)))+2,
-                                                       BLOCKLEN-4, BLOCKLEN-4])
-                    else:  # 블럭이 차있는 구역은 블럭 그리기
-                        blocklist[i // BOARDN][i % BOARDN].showblockthingy()
-                
-                if len(checklist) == 0: 
+                if is_valid==False: 
                     done = True
                     gameovertext = bigfont.render("GAME OVER!", True, BLACK)
                     gameovertextrect = gameovertext.get_rect()
@@ -252,14 +304,104 @@ def runGame():
                     screen.blit(gameovertext, gameovertextrect)
                     pygame.display.update()
                     time.sleep(2)
-                elif checkmoved == True:  # 전체 블럭에 변화가 있을 때만 newrect 생성
-                    newposition = random.choice(checklist)
-                    blocklist[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
-                    blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
-                    checklist.remove(newposition)
-        pygame.display.update()  # update UI
-        checkmoved = False
+                # 블럭이 차지 않은 구역 확인 & 블럭이 모두 차있을 경우 게임 오버 & 해당 구역에서 랜덤하게 하나를 뽑아 블럭 생성
+                
+            pygame.display.update()  # update UI
     return score
+
+def ai_depth(board, depth, score_in_function):
+    if(depth>4):
+        return None, score_in_function
+    else:
+        maxindex = None
+        maximum = score_in_function
+        for i in range(4):
+            return_list = moves[i](board)
+
+            if return_list[1] == False or return_list[3] == False:  # full or don`t move
+                continue
+            else:  # not full and moved
+                new_board = copy.deepcopy(return_list[0])
+                new_score = score_in_function + return_list[2]
+                _, i_value = ai_depth(new_board, depth + 1, new_score)
+                if maximum <= i_value:
+                    maxindex = i
+                    maximum = i_value
+    return maxindex, maximum
+
+def AIrunGame():
+    done = False
+    blocklist_in_ai = [[blockthingy(0, i, j) for j in range(0, BOARDN)] for i in range(0, BOARDN)]
+    is_valid_in_ai = True
+    score_in_ai = 0
+    screen.fill(WHITE)
+    for i in range(BOARDN):
+        for j in range(BOARDN):
+            pygame.draw.rect(screen, BLACK, [(size[0] / 2) + (BLOCKLEN * (i - (BOARDN / 2))),
+                                                (size[1] / 2) + (BLOCKLEN * (j - (BOARDN / 2))), BLOCKLEN, BLOCKLEN], 2)
+    # 첫 블럭 생성
+    newposition = random.randint(0, BOARDN * BOARDN - 1)
+    blocklist_in_ai[newposition // BOARDN][newposition % BOARDN] = blockthingy(2, newposition // BOARDN, newposition % BOARDN)
+    draw_blocklist(blocklist_in_ai)
+
+    pygame.draw.rect(screen, (180, 255, 180),[round(size[0] / 3),round(size[1] * 11 / 120),round(size[0] / 3),round(size[1] / 20)])
+    scoretext1 = font.render("SCORE", True, BLACK)
+    scoretextrect1 = scoretext1.get_rect()
+    scoretextrect1.center = (round(size[0] / 2), round(size[1] / 15))
+    screen.blit(scoretext1, scoretextrect1)
+
+    scoretext2 = font.render(str(score_in_ai), True, BLACK)
+    scoretextrect2 = scoretext2.get_rect()
+    scoretextrect2.center = (round(size[0] / 2), round(size[1] * 7 / 60))
+    screen.blit(scoretext2, scoretextrect2)
+    pygame.display.update()
+
+    tick=0
+    while not done:
+        clock.tick(60)
+        tick+=1
+        # 점수판
+        pygame.draw.rect(screen, (180, 255, 180),[round(size[0] / 3),round(size[1] * 11 / 120),round(size[0] / 3),round(size[1] / 20)])
+        
+        if tick%5==0:
+            best_move, _ = ai_depth(blocklist_in_ai, 0, 0)
+            if best_move!=None:
+                print(best_move)
+                return_list = moves[best_move](blocklist_in_ai)
+                blocklist_in_ai= copy.deepcopy(return_list[0])
+                is_valid_in_ai=return_list[1]
+                score_in_ai=score_in_ai + return_list[2]
+                draw_blocklist(blocklist_in_ai)
+                if is_valid_in_ai == False:
+                    done = True
+                    gameovertext = bigfont.render("GAME OVER!", True, BLACK)
+                    gameovertextrect = gameovertext.get_rect()
+                    gameovertextrect.center = (size[0] / 2, size[1] / 2)
+                    screen.blit(gameovertext, gameovertextrect)
+                    pygame.display.update()
+                    time.sleep(2)
+            else:
+                done = True
+                gameovertext = bigfont.render("GAME OVER!", True, BLACK)
+                gameovertextrect = gameovertext.get_rect()
+                gameovertextrect.center = (size[0] / 2, size[1] / 2)
+                screen.blit(gameovertext, gameovertextrect)
+                pygame.display.update()
+                time.sleep(2)
+            scoretext2 = font.render(str(score_in_ai), True, BLACK)
+            scoretextrect2 = scoretext2.get_rect()
+            scoretextrect2.center = (round(size[0] / 2), round(size[1] * 7 / 60))
+            screen.blit(scoretext2, scoretextrect2)
+            pygame.display.update()
+            tick=0  
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+                  
+    
+
+
+
 
 
 
