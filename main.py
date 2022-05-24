@@ -11,7 +11,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 size = [600, 600]
-BOARDN = 5
+BOARDN = 3
 BLOCKLEN = 70
 checkmoved = 0
 score = 0
@@ -19,6 +19,7 @@ score = 0
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("2048!")
 font = pygame.font.SysFont('arial', 20)
+bigfont=pygame.font.SysFont('arial', 40, True, True)
 done = False
 clock = pygame.time.Clock()
 
@@ -94,17 +95,17 @@ def runGame():
     blocklist[newposition // BOARDN][newposition % BOARDN].showblockthingy()
     while not done:
         clock.tick(10)
-
-        pygame.draw.rect(screen, (180,255,180), [200,55,200,30])
+        # 점수판
+        pygame.draw.rect(screen, (180,255,180), [round(size[0]/3),round(size[1]*11/120),round(size[0]/3),round(size[1]/20)])
 
         scoretext1 = font.render("SCORE", True, BLACK)
         scoretextrect1 = scoretext1.get_rect()
-        scoretextrect1.center = (size[0]/2,size[1]/15)
+        scoretextrect1.center = (round(size[0]/2),round(size[1]/15))
         screen.blit(scoretext1, scoretextrect1)
 
         scoretext2 = font.render(str(score), True, BLACK)
         scoretextrect2 = scoretext2.get_rect()
-        scoretextrect2.center = (size[0]/2,size[1]*7/60)
+        scoretextrect2.center = (round(size[0]/2),round(size[1]*7/60))
         screen.blit(scoretext2, scoretextrect2)
 
         for event in pygame.event.get():
@@ -217,7 +218,7 @@ def runGame():
                         blocklist[i // BOARDN][i % BOARDN].showblockthingy()
                 if len(checklist) == 0:
                     done = True
-                    gameovertext = font.render("GAME OVER!", True, BLACK)
+                    gameovertext = bigfont.render("GAME OVER!", True, BLACK)
                     gameovertextrect = gameovertext.get_rect()
                     gameovertextrect.center = (size[0]/2,size[1]/2)
                     screen.blit(gameovertext, gameovertextrect)
@@ -232,7 +233,6 @@ def runGame():
         pygame.display.update()  # update UI
         checkmoved = 0
 
-    print("GAME OVER!")
 
 
 if __name__ == "__main__":
