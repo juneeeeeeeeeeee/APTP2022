@@ -363,7 +363,7 @@ def AIrunGame():
         # 점수판
         pygame.draw.rect(screen, (180, 255, 180),[round(size[0] / 3),round(size[1] * 11 / 120),round(size[0] / 3),round(size[1] / 20)])
         
-        if tick%5==0:
+        if tick%1==0:
             best_move, _ = ai_depth(blocklist_in_ai, 0, 0)
             if best_move!=None:
                 print(best_move)
